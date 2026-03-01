@@ -9,14 +9,16 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 
-// 🔥 SECURITY FIX: Token aur Chat ID ab sirf .env file (ya Render) se aayenge
-// Code mein koi hardcoded secret nahi hai!
+// 🔥 Browser me blank/error na aaye uske liye Welcome message 🔥
+app.get('/', (req, res) => {
+    res.send('PlayX Backend is Live and Running on Cloud! 🚀');
+});
+
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID; 
 
 const upload = multer({ dest: 'uploads/' });
 
-// --- UPLOAD ROUTE ---
 app.post('/api/upload', upload.single('video'), async (req, res) => {
     try {
         if (!req.file) {
@@ -65,12 +67,10 @@ app.post('/api/upload', upload.single('video'), async (req, res) => {
     }
 });
 
-// --- EFFICIENT ROUTE (Zero Bandwidth) ---
 app.get('/api/get-video-url/:fileId', async (req, res) => {
     try {
         const fileId = req.params.fileId;
         
-        // 1. Telegram API se file ka path mangna
         const fileUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`;
         const fileResponse = await axios.get(fileUrl);
         
@@ -80,10 +80,8 @@ app.get('/api/get-video-url/:fileId', async (req, res) => {
         
         const filePath = fileResponse.data.result.file_path;
 
-        // 2. Direct HTTPS URL banana (Telegram Server ka)
         const directUrl = `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${filePath}`;
 
-        // 3. Sirf JSON link bhej rahe hain, video server se nahi nikal rahi!
         res.status(200).json({ 
             success: true, 
             directUrl: directUrl 
