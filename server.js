@@ -1,17 +1,22 @@
-require('dotenv').config(); // Environment variables ke liye
+require('dotenv').config(); 
 const express = require('express');
 const multer = require('multer');
 const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
 const cors = require('cors');
+const path = require('path'); // NAYA IMPORT HTML KE LIYE
 
 const app = express();
 app.use(cors());
 
-// 🔥 Browser me blank/error na aaye uske liye Welcome message 🔥
 app.get('/', (req, res) => {
     res.send('PlayX Backend is Live and Running on Cloud! 🚀');
+});
+
+// 🔥 NAYA ROUTE: LANDING PAGE DIKHANE KE LIYE 🔥
+app.get('/watch', (req, res) => {
+    res.sendFile(path.join(__dirname, 'watch.html'));
 });
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;

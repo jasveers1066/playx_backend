@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch on PlayX</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f8f9fa; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .logo { font-size: 20px; font-weight: bold; color: #ff3b30; }
+        .open-btn { background: #007aff; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .video-card { margin: 20px; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; }
+        .video-thumbnail { width: 100%; height: 220px; object-fit: cover; filter: brightness(0.7); }
+        .video-title { padding: 15px; font-size: 18px; font-weight: bold; color: #333; }
+        .view-in-app-overlay { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; }
+        .play-btn { background: rgba(0,0,0,0.6); color: white; border: 1px solid white; padding: 10px 20px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(5px); }
+        .play-btn span { background: #007aff; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">PlayX</div>
+        <button class="open-btn" onclick="openApp()">App</button>
+    </div>
+
+    <div class="video-card">
+        <img id="dynamic-thumb" src="https://via.placeholder.com/400x220" alt="Video Thumbnail" class="video-thumbnail">
+        <div class="video-title" id="dynamic-title">Loading Video...</div>
+        
+        <div class="view-in-app-overlay">
+            <button class="play-btn" onclick="openApp()">
+                ▶ View in App <span>Free</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // URL se data nikalna
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoId = urlParams.get('id');
+        const title = urlParams.get('title');
+        const thumb = urlParams.get('thumb');
+
+        // Page par data set karna
+        if(thumb) document.getElementById('dynamic-thumb').src = thumb;
+        if(title) document.getElementById('dynamic-title').innerText = title;
+
+        // Deep Linking Logic
+        function openApp() {
+            if(!videoId) return;
+            var appUrl = "playx://video/" + videoId; 
+            var playStoreUrl = "https://play.google.com/store/apps/details?id=com.playx.app"; // Apna actual package id daalein
+
+            window.location.href = appUrl;
+
+            setTimeout(function() {
+                window.location.href = playStoreUrl;
+            }, 2500);
+        }
+    </script>
+
+</body>
+</html>
