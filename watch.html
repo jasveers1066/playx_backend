@@ -21,7 +21,7 @@
 
     <div class="header">
         <div class="logo">PlayX</div>
-        <button class="open-btn" onclick="openApp()">App</button>
+        <button class="open-btn" onclick="openApp()">Download APK</button>
     </div>
 
     <div class="video-card">
@@ -36,7 +36,7 @@
     </div>
 
     <script>
-        // URL se data nikalna
+        // URL se data nikalna (id, title, thumb)
         const urlParams = new URLSearchParams(window.location.search);
         const videoId = urlParams.get('id');
         const title = urlParams.get('title');
@@ -46,16 +46,24 @@
         if(thumb) document.getElementById('dynamic-thumb').src = thumb;
         if(title) document.getElementById('dynamic-title').innerText = title;
 
-        // Deep Linking Logic
+        // Deep Linking & Direct Google Drive APK Download Logic
         function openApp() {
-            if(!videoId) return;
-            var appUrl = "playx://video/" + videoId; 
-            var playStoreUrl = "https://play.google.com/store/apps/details?id=com.playx.app"; // Apna actual package id daalein
+            // Google Drive se direct download URL
+            var apkDownloadUrl = "https://drive.google.com/uc?export=download&id=1zQCqComSIrEE21PVuhH2qlMAXHa3fY13"; 
+            
+            if(!videoId) {
+                window.location.href = apkDownloadUrl;
+                return;
+            }
 
+            var appUrl = "playx://video/" + videoId; 
+
+            // App kholne ki koshish karega
             window.location.href = appUrl;
 
+            // Agar 2.5 sec mein app nahi khuli (matlab app downloaded nahi hai), toh APK download shuru ho jayegi
             setTimeout(function() {
-                window.location.href = playStoreUrl;
+                window.location.href = apkDownloadUrl;
             }, 2500);
         }
     </script>
